@@ -224,6 +224,17 @@ function generate_outbound(node) {
 
 		server: node.address,
 		server_port: strToInt(node.port),
+		/* Queqiao */
+		profile_path: (node.type === 'queqiao') ? node.queqiao_profile_path : null,
+		provider_id: (node.type === 'queqiao' && !node.queqiao_profile_path) ? node.queqiao_provider_id : null,
+		gateway_id: (node.type === 'queqiao' && !node.queqiao_profile_path) ? node.queqiao_gateway_id : null,
+		root_certificate: (node.type === 'queqiao' && !node.queqiao_profile_path) ? node.queqiao_root_certificate : null,
+		device_certificate: (node.type === 'queqiao' && !node.queqiao_profile_path) ? node.queqiao_device_certificate : null,
+		device_private_key: (node.type === 'queqiao' && !node.queqiao_profile_path) ? node.queqiao_device_private_key : null,
+		congestion: (node.type === 'queqiao') ? node.queqiao_congestion : null,
+		max_sessions: (node.type === 'queqiao') ? strToInt(node.queqiao_max_sessions) : null,
+		hop_port_count: (node.type === 'queqiao') ? strToInt(node.queqiao_hop_port_count) : null,
+		hop_ports: (node.type === 'queqiao') ? node.queqiao_hop_ports : null,
 		/* Hysteria(2) */
 		server_ports: node.hysteria_hopping_port,
 
@@ -316,7 +327,7 @@ function generate_outbound(node) {
 				short_id: node.tls_reality_short_id
 			} : null
 		} : null,
-		transport: !isEmpty(node.transport) ? {
+		transport: (node.type === 'queqiao') ? node.queqiao_transport : !isEmpty(node.transport) ? {
 			type: node.transport,
 			host: node.http_host || node.httpupgrade_host,
 			path: node.http_path || node.ws_path,

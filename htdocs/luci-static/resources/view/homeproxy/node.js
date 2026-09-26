@@ -431,6 +431,7 @@ function renderNodeSettings(section, data, features, main_node, routing_mode) {
 	if (features.with_quic) {
 		o.value('hysteria', _('Hysteria'));
 		o.value('hysteria2', _('Hysteria2'));
+		o.value('queqiao', _('Queqiao'));
 	}
 	o.value('shadowsocks', _('Shadowsocks'));
 	o.value('shadowtls', _('ShadowTLS'));
@@ -491,6 +492,73 @@ function renderNodeSettings(section, data, features, main_node, routing_mode) {
 
 		return true;
 	}
+	o.modalonly = true;
+
+	/* Queqiao config */
+	o = s.option(form.Value, 'queqiao_profile_path', _('Queqiao profile path'),
+		_('Use an existing enrolled client profile. Leave empty to enter the identity below.'));
+	o.depends('type', 'queqiao');
+	o.modalonly = true;
+
+	for (let [key, label] of [
+		['provider_id', _('Provider ID')], ['gateway_id', _('Gateway ID')]
+	]) {
+		o = s.option(form.Value, 'queqiao_' + key, label);
+		o.depends({'type': 'queqiao', 'queqiao_profile_path': ''});
+		o.rmempty = false;
+		o.modalonly = true;
+	}
+	for (let [key, label] of [
+		['root_certificate', _('Root certificate')],
+		['device_certificate', _('Device certificate chain')],
+		['device_private_key', _('Device private key')]
+	]) {
+		o = s.option(form.TextValue, 'queqiao_' + key, label);
+		o.monospace = true;
+		o.rows = 5;
+		o.depends({'type': 'queqiao', 'queqiao_profile_path': ''});
+		o.rmempty = false;
+		o.modalonly = true;
+	}
+	o = s.option(form.ListValue, 'queqiao_transport', _('Queqiao transport'));
+	o.value('auto', _('Auto (QUIC and TCP fallback)'));
+	o.value('quic', _('QUIC'));
+	o.value('tcp', _('TCP'));
+	o.default = 'auto';
+	o.depends('type', 'queqiao');
+	o.modalonly = true;
+
+	o = s.option(form.Value, 'queqiao_congestion', _('Queqiao congestion control'));
+	o.placeholder = 'erasure';
+	o.depends('type', 'queqiao');
+	o.modalonly = true;
+
+	o = s.option(form.Value, 'queqiao_max_sessions', _('Maximum sessions'));
+	o.datatype = 'uinteger';
+	o.depends('type', 'queqiao');
+	o.modalonly = true;
+
+	o = s.option(form.DynamicList, 'queqiao_hop_ports', _('UDP hop ports'),
+		_('Ports or inclusive ranges such as 20000:20031. Must match the server.'));
+	o.depends('type', 'queqiao');
+	o.validate = function(_section_id, value) {
+		if (!value) return true;
+		let parts = value.split(':').map(Number);
+		return /^\d+(?::\d+)?$/.test(value) && parts[0] >= 1 &&
+			parts[parts.length - 1] <= 65535 && parts[0] <= parts[parts.length - 1]
+			? true : _('Enter a valid port or port range.');
+	};
+	o.modalonly = true;
+
+	o = s.option(form.Value, 'queqiao_hop_port_count', _('UDP hop port count'),
+		_('Legacy derived hopping mode; leave empty when explicit hop ports are set.'));
+	o.datatype = 'range(2,100)';
+	o.depends('type', 'queqiao');
+	o.validate = function(section_id, value) {
+		if (value && this.section.formvalue(section_id, 'queqiao_hop_ports')?.length)
+			return _('UDP hop ports and port count cannot both be set.');
+		return true;
+	};
 	o.modalonly = true;
 
 	/* Direct config */

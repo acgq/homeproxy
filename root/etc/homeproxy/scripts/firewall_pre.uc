@@ -39,8 +39,22 @@ if (server_enabled === '1') {
 		if (s.enabled !== '1' || s.firewall !== '1')
 			return;
 
-		let proto = s.network || '{ tcp, udp }';
+		let proto = s.type === 'queqiao'
+			? (s.queqiao_transport === 'tcp' ? 'tcp' : s.queqiao_transport === 'quic' ? 'udp' : '{ tcp, udp }')
+			: (s.network || '{ tcp, udp }');
 		push(input, `meta l4proto ${proto} th dport ${s.port} counter accept comment "!${cfgname}: accept server ${s['.name']}"`);
+		if (s.type === 'queqiao' && s.queqiao_transport !== 'tcp') {
+			for (let port of (s.queqiao_hop_ports || [])) {
+				let parts = split(port, ':');
+				if (length(parts) > 2 || !match(parts[0], /^[0-9]+$/) ||
+					(length(parts) === 2 && !match(parts[1], /^[0-9]+$/)))
+					continue;
+				let first = +parts[0], last = +(parts[1] || parts[0]);
+				if (first < 1 || last > 65535 || first > last)
+					continue;
+				push(input, `udp dport { ${first}${first === last ? '' : '-' + last} } counter accept comment "!${cfgname}: accept queqiao hops ${s['.name']}"`);
+			}
+		}
 	});
 }
 

@@ -8,6 +8,84 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Queqiao"
+msgstr "鹊桥"
+
+msgid "Queqiao profile path"
+msgstr "鹊桥客户端档案路径"
+
+msgid "Use an existing enrolled client profile. Leave empty to enter the identity below."
+msgstr "使用已有的已注册客户端档案；留空则填写下方身份信息。"
+
+msgid "Queqiao provider path"
+msgstr "鹊桥服务商目录路径"
+
+msgid "Use an existing provider directory. Leave empty to enter the identity and users below."
+msgstr "使用已有服务商目录；留空则填写下方身份和用户信息。"
+
+msgid "Provider ID"
+msgstr "服务商 ID"
+
+msgid "Gateway ID"
+msgstr "网关 ID"
+
+msgid "Root certificate"
+msgstr "根证书"
+
+msgid "Device certificate chain"
+msgstr "设备证书链"
+
+msgid "Device private key"
+msgstr "设备私钥"
+
+msgid "Gateway certificate chain"
+msgstr "网关证书链"
+
+msgid "Gateway private key"
+msgstr "网关私钥"
+
+msgid "Queqiao users (JSON array)"
+msgstr "鹊桥用户（JSON 数组）"
+
+msgid "Each user needs name, account_id, device_id and public_key."
+msgstr "每位用户需填写 name、account_id、device_id 和 public_key。"
+
+msgid "Enter a non-empty JSON array of Queqiao users."
+msgstr "请输入非空的鹊桥用户 JSON 数组。"
+
+msgid "Queqiao transport"
+msgstr "鹊桥传输方式"
+
+msgid "Auto (QUIC and TCP fallback)"
+msgstr "自动（QUIC 与 TCP 回退）"
+
+msgid "Queqiao congestion control"
+msgstr "鹊桥拥塞控制"
+
+msgid "Maximum sessions"
+msgstr "最大会话数"
+
+msgid "UDP hop ports"
+msgstr "UDP 跳跃端口"
+
+msgid "Ports or inclusive ranges such as 20000:20031. Must match the server."
+msgstr "端口或包含两端的区间，例如 20000:20031；须与服务端一致。"
+
+msgid "Ports or inclusive ranges such as 20000:20031. Must match the client."
+msgstr "端口或包含两端的区间，例如 20000:20031；须与客户端一致。"
+
+msgid "UDP hop port count"
+msgstr "UDP 跳跃端口数量"
+
+msgid "Legacy derived hopping mode; leave empty when explicit hop ports are set."
+msgstr "旧版推导模式；设置明确的跳跃端口时请留空。"
+
+msgid "UDP hop ports and port count cannot both be set."
+msgstr "不能同时设置跳跃端口和端口数量。"
+
+msgid "Enter a valid port or port range."
+msgstr "请输入有效端口或端口区间。"
+
 #: htdocs/luci-static/resources/view/homeproxy/status.js:206
 msgid "%s log"
 msgstr "%s 日志"

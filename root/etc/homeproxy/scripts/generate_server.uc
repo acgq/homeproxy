@@ -56,6 +56,18 @@ uci.foreach(uciconfig, uciserver, (cfg) => {
 		udp_timeout: strToTime(cfg.udp_timeout),
 		network: cfg.network,
 
+		/* Queqiao */
+		provider_path: (cfg.type === 'queqiao') ? cfg.queqiao_provider_path : null,
+		provider_id: (cfg.type === 'queqiao' && !cfg.queqiao_provider_path) ? cfg.queqiao_provider_id : null,
+		gateway_id: (cfg.type === 'queqiao' && !cfg.queqiao_provider_path) ? cfg.queqiao_gateway_id : null,
+		root_certificate: (cfg.type === 'queqiao' && !cfg.queqiao_provider_path) ? cfg.queqiao_root_certificate : null,
+		gateway_certificate: (cfg.type === 'queqiao' && !cfg.queqiao_provider_path) ? cfg.queqiao_gateway_certificate : null,
+		gateway_private_key: (cfg.type === 'queqiao' && !cfg.queqiao_provider_path) ? cfg.queqiao_gateway_private_key : null,
+		congestion: (cfg.type === 'queqiao') ? cfg.queqiao_congestion : null,
+		max_sessions: (cfg.type === 'queqiao') ? strToInt(cfg.queqiao_max_sessions) : null,
+		hop_port_count: (cfg.type === 'queqiao') ? strToInt(cfg.queqiao_hop_port_count) : null,
+		hop_ports: (cfg.type === 'queqiao') ? cfg.queqiao_hop_ports : null,
+
 		/* AnyTLS */
 		padding_scheme: cfg.anytls_padding_scheme,
 
@@ -84,7 +96,7 @@ uci.foreach(uciconfig, uciserver, (cfg) => {
 		heartbeat: strToTime(cfg.tuic_heartbeat),
 
 		/* AnyTLS / HTTP / Hysteria (2) / Mixed / Socks / Trojan / Tuic / VLESS / VMess */
-		users: (cfg.type !== 'shadowsocks') ? [
+		users: (cfg.type === 'queqiao') ? (cfg.queqiao_provider_path ? null : json(cfg.queqiao_users || '[]')) : (cfg.type !== 'shadowsocks') ? [
 			{
 				name: !(cfg.type in ['http', 'mixed', 'naive', 'socks']) ? 'cfg-' + cfg['.name'] + '-server' : null,
 				username: cfg.username,
@@ -161,7 +173,7 @@ uci.foreach(uciconfig, uciserver, (cfg) => {
 			} : null
 		} : null,
 
-		transport: !isEmpty(cfg.transport) ? {
+		transport: (cfg.type === 'queqiao') ? cfg.queqiao_transport : !isEmpty(cfg.transport) ? {
 			type: cfg.transport,
 			host: cfg.http_host || cfg.httpupgrade_host,
 			path: cfg.http_path || cfg.ws_path,
