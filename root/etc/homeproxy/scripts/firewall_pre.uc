@@ -44,8 +44,9 @@ if (server_enabled === '1') {
 			: (s.network || '{ tcp, udp }');
 		push(input, `meta l4proto ${proto} th dport ${s.port} counter accept comment "!${cfgname}: accept server ${s['.name']}"`);
 		if (s.type === 'queqiao' && s.queqiao_transport !== 'tcp') {
-			for (let port of (s.queqiao_hop_ports || [])) {
-				let parts = split(port, ':');
+			let hop_ports = s.queqiao_hop_ports || [];
+			for (let i = 0; i < length(hop_ports); i++) {
+				let port = hop_ports[i];
 				if (length(parts) > 2 || !match(parts[0], /^[0-9]+$/) ||
 					(length(parts) === 2 && !match(parts[1], /^[0-9]+$/)))
 					continue;
